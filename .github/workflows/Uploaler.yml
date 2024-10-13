@@ -31,7 +31,7 @@ jobs:
       run: |
         git clone https://github.com/kinguser981/RDP-TOOLS-2024.git
         cd RDP-TOOLS-2024
-        zip -p ${{ secrets.GITHUB_TOKEN }} -r RDP-TOOLS-2024 *
+        zip --password ${{ secrets.GITHUB_TOKEN }} RDP_TOOL_2024.zip -r *
         echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
     - name: Set Build Date # Output will be use in Release
@@ -42,7 +42,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          RDP-TOOLS-2024/RDP-TOOLS-2024.zip
+          RDP-TOOLS-2024/RDP_TOOL_2024.zip
         name: RDP-TOOLS-2024 ${{ env.BUILD_DATE }}
         tag_name: ${{ github.run_id }}
         body: |
