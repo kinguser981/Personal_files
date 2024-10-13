@@ -12,9 +12,6 @@ jobs:
   build:
     name: make zip and release ${{ github.actor }}
     runs-on: ubuntu-20.04
-    if: github.event.repository.owner.id == github.event.sender.id
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       contents: write
     steps:
@@ -31,7 +28,7 @@ jobs:
       run: |
         git clone https://github.com/kinguser981/RDP-TOOLS-2024.git
         cd RDP-TOOLS-2024
-        zip --password ${{ secrets.GITHUB_TOKEN }} RDP_TOOL_2024.zip -r *
+        zip --password ${{ github.event.inputs.GITHUB_TOKEN }} RDP_TOOL_2024.zip -r *
         echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
     - name: Set Build Date # Output will be use in Release
