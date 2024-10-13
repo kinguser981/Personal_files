@@ -1,0 +1,51 @@
+name: RDP-TOOLS-2024
+
+on:
+  workflow_dispatch:
+    inputs:
+      GITHUB_TOKEN:
+        description: 'your Zip file Password'
+        required: true
+        default: 'XXXXXXXXXXXXXXXXXXXXXXXXXX'
+        
+jobs:
+  build:
+    name: make zip and release ${{ github.actor }}
+    runs-on: ubuntu-20.04
+    if: github.event.repository.owner.id == github.event.sender.id
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+    steps:
+    - name: Check Out
+      uses: actions/checkout@v3
+
+    - name: Prepare the environment
+      run: |
+        sudo apt update
+        sudo apt -y upgrade
+        sudo apt -y install tar zip wget
+
+    - name: Clone and Build
+      run: |
+        git clone https://github.com/kinguser981/RDP-TOOLS-2024.git
+        cd RDP-TOOLS-2024
+        zip -p ${{ github.event.inputs.GITHUB_TOKEN }} -r RDP_TOOLS_2024 *
+        echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
+    - name: Set Build Date # Output will be use in Release
+      run: |
+        echo "BUILD_DATE=$(date +%Y%m%d)" >> $GITHUB_ENV
+
+    - name: Release files
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          RDP-TOOLS-2024/RDP_TOOLS_2024.zip
+        name: RDP-TOOLS-2024 ${{ env.BUILD_DATE }}
+        tag_name: ${{ github.run_id }}
+        body: |
+          Changelog:
+                RDP-TOOLS-2024
+        continue-on-error: true
