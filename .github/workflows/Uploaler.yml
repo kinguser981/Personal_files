@@ -6,7 +6,7 @@ on:
       GITHUB_TOKEN:
         description: 'your Zip file Password'
         required: true
-        default: 'XXXXXXXXXXXXXXXXXXXXXXXXXX'
+        default: 'XXXXXXXXXXXXXXX'
         
 jobs:
   build:
